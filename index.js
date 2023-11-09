@@ -15,7 +15,13 @@ app.set("view engine", "handlebars");
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
 
+
 const routes = require('./routes')
+
+const db = require('./config/db');
+
+// Connect to DB
+db.connect();
 
 routes(app)
 // app.get("/", (req, res) => {
