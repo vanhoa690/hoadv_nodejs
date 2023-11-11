@@ -33,15 +33,7 @@ class ProductsController {
 
   // [GET] /product/create
   async createProduct(req, res) {
-    try {
-      const product = await Product.findOne({ slug: req.params.slug });
-      // res.json(product);
-      res.render('products/create', {
-        product: mongooseToObject(product),
-      });
-    } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
-    }
+      res.render('products/create');
   }
 
    // [POST] /product/store
