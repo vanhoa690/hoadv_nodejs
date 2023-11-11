@@ -1,0 +1,28 @@
+<div class="mt-4">
+    <h3>Create New Product</h3>
+
+    <form method="POST" action="/products/store" class="mt-4">
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+         <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea class="form-control" id="content" name="content"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="text" class="form-control" id="image" name="image">
+        </div>
+        <div class="form-group">
+            <label for="level">Price</label>
+            <input type="number" class="form-control" id="price" name="price">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Product</button>
+    </form>
+</div>
