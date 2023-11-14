@@ -9,10 +9,10 @@ class ProductsController {
   async getAllProducts(req, res) {
     try {
       const products = await Product.find();
-      // res.json(products);
-      res.render('products/list', {
-        products: mutipleMongooseToObject(products),
-      });
+      res.json(products);
+      // res.render('products/list', {
+      //   products: mutipleMongooseToObject(products),
+      // });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -33,15 +33,35 @@ class ProductsController {
 
   // [GET] /product/create
   async createProduct(req, res) {
-      res.render('products/create');
+    res.render('products/create');
   }
 
-   // [POST] /product/store
-   async storeProduct(req, res) {
+  // [POST] /product/store
+  async storeProduct(req, res) {
     try {
-      const product = new Product(req.body)
-      await product.save()
-      res.redirect('/products')
+      const product = new Product(req.body);
+      await product.save();
+      res.redirect('/products');
+    } catch (error) {
+      res.status(400).json({ error: 'ERROR!!!' });
+    }
+  }
+
+  // [PUT] /products/:id
+  async updateProduct(req, res) {
+    try {
+      const product = await Product.updateOne({ _id: req.params.id }, req.body);
+      res.status(200).json({ message: 'update ok'});
+    } catch (error) {
+      res.status(400).json({ error: 'ERROR!!!' });
+    }
+  }
+
+  // [DELETE] /products/:id
+  async deleleProduct(req, res, next) {
+    try {
+      const products = await Product.deleteOne({ _id: req.params.id });
+      res.status(200).json({ message: 'ok' });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
