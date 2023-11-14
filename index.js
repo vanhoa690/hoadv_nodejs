@@ -3,19 +3,18 @@ const { engine } = require("express-handlebars");
 
 const app = express();
 const port = 3000;
-// app.use(express.urlencoded());
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc  = require('swagger-jsdoc');
 app.use(express.urlencoded({
   extended: true
 }));
 app.use(express.json());
 
 // Template engine
-app.engine("handlebars", engine());
-app.set("view engine", "handlebars");
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
 
-
+// Routes
 const routes = require('./routes')
 
 const db = require('./config/db');
@@ -23,35 +22,25 @@ const db = require('./config/db');
 // Connect to DB
 db.connect();
 
+
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "REST API Docs",
+    },
+  },
+  apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsdoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
+);
 routes(app)
-// app.get("/", (req, res) => {
-//   // return res.send('Hello World!');
-//   res.render("home");
-// });
-
-// app.get("/products/:id", (req, res) => {
-//   const {query, params, body} = req
-//   console.log(query)
-//   console.log(params)
-//   console.log(body)
-//   // return res.send('Hello World!');
-//   res.render("home");
-// });
-
-// app.post("/products", (req, res) => {
-//   const { body} = req
-//   console.log(body)
-//   // return res.send('Hello World!');
-//   res.render("home");
-// });
-
-// app.get("/search", (req, res) => {
-// //   return res.send("Hello search!");
-// const {query, params, body} = req
-//   console.log(query)
-// res.render("search");
-// });
-
 app.listen(port, () =>
   console.log(`App listening at http://localhost:${port}`)
 );
