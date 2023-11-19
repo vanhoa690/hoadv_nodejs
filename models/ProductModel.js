@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
-const slug = require('mongoose-slug-updater');
+// const slug = require('mongoose-slug-updater');
 
-mongoose.plugin(slug);
+// mongoose.plugin(slug);
 
 const Schema = mongoose.Schema;
 
 const Product = new Schema(
   {
-    title: { type: String, maxLength: 255, required: true },
+    title: { type: String },
     // slug: { type: String, slug: 'name', unique: true },
-    description: { type: String, maxLength: 600 },
+    description: { type: String },
     category: { type: String },
-    image: { type: String, maxLength: 255 },
+    image: { type: String },
     price: { type: Number },
     rate: { type: Number },
   },
