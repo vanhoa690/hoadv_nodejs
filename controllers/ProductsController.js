@@ -21,11 +21,12 @@ class ProductsController {
   // [GET] /products/:id
   async getProductDetail(req, res) {
     try {
-      const product = await Product.findOne({ slug: req.params.slug });
-      // res.json(product);
-      res.render('products/detail', {
-        product: mongooseToObject(product),
-      });
+      const product = await Product.findById(req.params.id);
+      res.json(product);
+      // res.render('products/detail', {
+      //   product: mongooseToObject(product),
+      //   title: 'Ti'
+      // });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -41,7 +42,7 @@ class ProductsController {
     try {
       const product = new Product(req.body);
       await product.save();
-      res.redirect('/products');
+      res.json({ message: "add ok"});
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -58,9 +59,10 @@ class ProductsController {
   }
 
   // [DELETE] /products/:id
-  async deleleProduct(req, res, next) {
+  // [DELETE] /products/delete/:id
+  async deleleProduct(req, res) {
     try {
-      const products = await Product.deleteOne({ _id: req.params.id });
+       await Product.deleteOne({ _id: req.params.id });
       res.status(200).json({ message: 'ok' });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
