@@ -7,14 +7,15 @@ const Schema = mongoose.Schema;
 
 const Product = new Schema(
   {
-    name: { type: String, maxLength: 255, required: true },
-    slug: { type: String, slug: 'name', unique: true },
+    title: { type: String, maxLength: 255, required: true },
+    // slug: { type: String, slug: 'name', unique: true },
     description: { type: String, maxLength: 600 },
-    content: { type: String },
+    category: { type: String },
     image: { type: String, maxLength: 255 },
     price: { type: Number },
+    rate: { type: Number },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 module.exports = mongoose.model('Product', Product);
