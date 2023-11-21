@@ -59,7 +59,6 @@ class ProductsController {
   }
 
   // [DELETE] /products/:id
-  // [DELETE] /products/delete/:id
   async deleleProduct(req, res) {
     try {
        await Product.deleteOne({ _id: req.params.id });
