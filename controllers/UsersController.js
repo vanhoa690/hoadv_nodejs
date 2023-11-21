@@ -14,7 +14,17 @@ class UsersController {
       const users = await User.find();
       res.json(users);
     } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
+      res.status(400).json({ message: error.message });
+    }
+  }
+
+  // [GET] /users/:id
+  async getUserDetail(req, res) {
+    try {
+      const user = await User.findById(req.params.id);
+      res.json(user);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
   }
 
@@ -39,7 +49,7 @@ class UsersController {
       });
       res.status(200).json({ message: 'Add user successfull' });
     } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
+      res.status(400).json({ message: error.message });
     }
   }
 
@@ -47,6 +57,7 @@ class UsersController {
   async loginUser(req, res) {
     try {
       const { email, password } = req.body;
+      // Bước 1: Validate email
 
       // Bước 2: Kiểm tra xem email có trong db hay không?
       const user = await User.findOne({ email });
@@ -57,7 +68,8 @@ class UsersController {
       }
 
       // Bước 3: Kiểm tra password
-      const isMatch = await bcryptjs.compare(password, user.password);
+      const isMatch = bcryptjs.compare(password, user.password);
+
       if (!isMatch) {
         return res.status(400).json({
           message: 'Email or Password không đúng, vui lòng kiểm tra lại!',
@@ -69,13 +81,16 @@ class UsersController {
         expiresIn: '1d',
       });
 
-      res.status(200).json({
+      res.json({
         message: 'Login successfull',
         token,
-        user: { email, username },
+        user: {
+          username: user.username,
+          email: user.email,
+        },
       });
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(400).json({ message: error.message });
     }
   }
 
@@ -85,7 +100,7 @@ class UsersController {
       await User.deleteOne({ _id: req.params.id });
       res.status(200).json({ message: 'Delete User Successful' });
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(400).json({ message: error.message });
     }
   }
 }

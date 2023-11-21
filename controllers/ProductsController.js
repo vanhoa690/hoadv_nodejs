@@ -1,8 +1,4 @@
 const Product = require('../models/ProductModel');
-const {
-  mutipleMongooseToObject,
-  mongooseToObject,
-} = require('../util/mongoose');
 
 class ProductsController {
   // [GET] /products
@@ -10,9 +6,6 @@ class ProductsController {
     try {
       const products = await Product.find();
       res.json(products);
-      // res.render('products/list', {
-      //   products: mutipleMongooseToObject(products),
-      // });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -23,26 +16,17 @@ class ProductsController {
     try {
       const product = await Product.findById(req.params.id);
       res.json(product);
-      // res.render('products/detail', {
-      //   product: mongooseToObject(product),
-      //   title: 'Ti'
-      // });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
   }
 
-  // [GET] /product/create
+  // [POST] /product
   async createProduct(req, res) {
-    res.render('products/create');
-  }
-
-  // [POST] /product/store
-  async storeProduct(req, res) {
     try {
       const product = new Product(req.body);
       await product.save();
-      res.json({ message: "add ok"});
+      res.json({ message: "Add Product Successful"});
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -52,7 +36,7 @@ class ProductsController {
   async updateProduct(req, res) {
     try {
       const product = await Product.updateOne({ _id: req.params.id }, req.body);
-      res.status(200).json({ message: 'update ok'});
+      res.status(200).json({ message: 'Update Product Successful'});
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -62,7 +46,7 @@ class ProductsController {
   async deleleProduct(req, res) {
     try {
        await Product.deleteOne({ _id: req.params.id });
-      res.status(200).json({ message: 'ok' });
+      res.status(200).json({ message: 'Delete Product Successful' });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
