@@ -1,12 +1,13 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+import usersController from '../controllers/UsersController';
+import { checkPermission } from '../middlewares/checkPermission';
 
-const usersController = require('../controllers/UsersController')
+const routerUsers = express.Router();
 
-router.get('/:id', usersController.getUserDetail)
-router.get('/', usersController.getAllUsers)
-router.post('/login', usersController.loginUser)
-router.post('/', usersController.createUser)
-router.delete('/:id', usersController.deleleUser)
+routerUsers.get('/:id', usersController.getUserDetail);
+routerUsers.get('/', usersController.getAllUsers);
+routerUsers.post('/login', usersController.loginUser);
+routerUsers.post('/', usersController.createUser);
+routerUsers.delete('/:id', checkPermission, usersController.deleleUser);
 
-module.exports = router;
+export default routerUsers;

@@ -1,11 +1,11 @@
-const products = require('./products')
-const site = require('./site')
-const users = require('./users')
+import routerProducts from './products';
+import routerSite from './site';
+import routerUsers from './users';
 
 function routes(app) {
-    app.use('/users', users)
-    app.use('/products', products)
-    app.use('/', site)
+  app.use('/users', routerUsers);
+  app.use('/products', routerProducts);
+  app.use('/', routerSite);
 }
 
-module.exports = routes
+export default routes;

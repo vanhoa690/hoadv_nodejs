@@ -1,12 +1,14 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+import productsController from '../controllers/ProductsController';
+import { checkPermission } from '../middlewares/checkPermission';
 
-const productsController = require('../controllers/ProductsController');
+const routerProducts = express.Router();
 
-router.get('/:id', productsController.getProductDetail);
-router.get('/', productsController.getAllProducts);
-router.post('/', productsController.createProduct);
-router.put('/:id', productsController.updateProduct);
-router.delete('/:id', productsController.deleleProduct);
+routerProducts.get('/:id', productsController.getProductDetail);
+routerProducts.get('/', productsController.getAllProducts);
+routerProducts.post('/', productsController.createProduct);
+routerProducts.put('/:id', productsController.updateProduct);
+routerProducts.delete('/:id', checkPermission, productsController.deleleProduct);
 
-module.exports = router;
+
+export default routerProducts

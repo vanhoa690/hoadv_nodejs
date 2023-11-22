@@ -1,7 +1,8 @@
-const User = require('../models/UserModel');
-const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
+import bcryptjs from 'bcryptjs';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+import { createUserValidator } from '../validations/user';
+import User from '../models/UserModel';
 
 dotenv.config();
 
@@ -32,6 +33,15 @@ class UsersController {
   async createUser(req, res) {
     try {
       const { username, email, password } = req.body;
+      // Bước 1: Kiểm tra dữ liệu người dùng
+      const { error } = createUserValidator.validate(req.body);
+      console.log(error);
+      if (error) {
+        const errors = error.details.map((err) => err.message);
+        return res.status(400).json({
+          messages: errors,
+        });
+      }
       // Bước 2: Email người dùng đăng ký đã tồn tại trong DB hay chưa?
       const userExist = await User.findOne({ email });
       if (userExist) {
@@ -58,7 +68,14 @@ class UsersController {
     try {
       const { email, password } = req.body;
       // Bước 1: Validate email
-
+      const { error } = createUserValidator.validate(req.body);
+      console.log(error);
+      if (error) {
+        const errors = error.details.map((err) => err.message);
+        return res.status(400).json({
+          messages: errors,
+        });
+      }
       // Bước 2: Kiểm tra xem email có trong db hay không?
       const user = await User.findOne({ email });
       if (!user) {
@@ -105,4 +122,4 @@ class UsersController {
   }
 }
 
-module.exports = new UsersController();
+export default new UsersController();

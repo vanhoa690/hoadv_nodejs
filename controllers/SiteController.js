@@ -1,4 +1,4 @@
-const Product = require('../models/ProductModel');
+import Product from '../models/ProductModel';
 
 class SiteController {
   // [GET] /
@@ -12,4 +12,4 @@ class SiteController {
   }
 }
 
-module.exports = new SiteController();
+export default new SiteController();

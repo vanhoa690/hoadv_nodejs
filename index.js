@@ -1,7 +1,9 @@
-const express = require('express');
-const { engine } = require('express-handlebars');
-const cors = require('cors');
-const dotenv = require('dotenv');
+import express from 'express';
+import { engine } from 'express-handlebars';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import routes from './routes';
+// import connectDb from './config/db';
 
 const app = express();
 dotenv.config();
@@ -21,12 +23,16 @@ app.use(express.json());
 app.engine('.hbs', engine({ extname: '.hbs' }));
 app.set('view engine', '.hbs');
 
-const routes = require('./routes');
-
-const db = require('./config/db');
-
 // Connect to DB
-db.connect(DB_URL);
+async function connectDb(dbUrl) {
+  try {
+    await mongoose.connect(dbUrl);
+    console.log('Connect successfully!!!');
+  } catch (error) {
+    console.log('Connect failure!!!');
+  }
+}
+connectDb(DB_URL);
 
 routes(app);
 

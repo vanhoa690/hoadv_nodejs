@@ -1,4 +1,4 @@
-const Product = require('../models/ProductModel');
+import Product from '../models/ProductModel';
 
 class ProductsController {
   // [GET] /products
@@ -26,7 +26,7 @@ class ProductsController {
     try {
       const product = new Product(req.body);
       await product.save();
-      res.json({ message: "Add Product Successful"});
+      res.json({ message: 'Add Product Successful' });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -36,7 +36,7 @@ class ProductsController {
   async updateProduct(req, res) {
     try {
       const product = await Product.updateOne({ _id: req.params.id }, req.body);
-      res.status(200).json({ message: 'Update Product Successful'});
+      res.status(200).json({ message: 'Update Product Successful' });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }
@@ -45,7 +45,7 @@ class ProductsController {
   // [DELETE] /products/:id
   async deleleProduct(req, res) {
     try {
-       await Product.deleteOne({ _id: req.params.id });
+      await Product.deleteOne({ _id: req.params.id });
       res.status(200).json({ message: 'Delete Product Successful' });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
@@ -53,4 +53,4 @@ class ProductsController {
   }
 }
 
-module.exports = new ProductsController();
+export default new ProductsController();
