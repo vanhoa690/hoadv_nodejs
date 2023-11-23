@@ -17,8 +17,7 @@
     "express-handlebars": "^7.1.2",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.0",
-    "mongoose-slug-updater": "^3.3.0"
+    "mongoose": "^8.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

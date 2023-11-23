@@ -7,7 +7,7 @@ class SiteController {
       const products = await Product.find();
       res.json(products);
     } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
+      res.status(400).json({ message: error.message });
     }
   }
 }
