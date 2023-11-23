@@ -8,6 +8,10 @@ const User = new Schema(
     email: { type: String },
     password: { type: String },
     avatar: { type: String },
+    role: {
+      type: String,
+      default: 'member',
+    },
   },
   { timestamps: true, versionKey: false }
 );
