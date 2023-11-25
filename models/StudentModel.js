@@ -12,7 +12,7 @@ const Student = new Schema(
     role: {
       type: String,
       default: 'student',
-    },
+    }
   },
   { timestamps: true, versionKey: false }
 );

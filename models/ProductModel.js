@@ -10,6 +10,7 @@ const Product = new Schema(
     image: { type: String },
     price: { type: Number },
     rate: { type: Number },
+    student: { type: Schema.Types.ObjectId, ref: 'Student' }
   },
   { timestamps: true, versionKey: false }
 );

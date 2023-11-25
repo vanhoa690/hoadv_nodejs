@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const User = require('../models/UserModel');
+const Student = require('../models/StudentModel');
 
 dotenv.config();
 
@@ -46,4 +47,39 @@ const checkPermission = async (req, res, next) => {
   }
 };
 
-module.exports = checkPermission;
+const checkPermissionStudent = async (req, res, next) => {
+  try {
+    // Bước 1: Kiểm tra xem đã đăng nhập hay chưa?
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return res.status(403).json({
+        message: 'Bạn chưa đăng nhập!',
+      });
+    }
+    // Bước 2: Verify token
+    const decoded = jwt.verify(token, SECRET_CODE);
+   
+    if (!decoded) {
+      throw new Error('Token Error!');
+    }
+    // console.log(decoded)
+    // Bước 3: Find User từ token
+    const student = await Student.findById(decoded._id);
+    // console.log(student)
+    if (!student) {
+      return res.status(404).json({
+        message: 'Student không tồn tại trong hệ thống!',
+      });
+    }
+    res.locals.student = student
+    next();
+  } catch (error) {
+    return res.status(400).json({
+      name: error.name,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {checkPermission, checkPermissionStudent};

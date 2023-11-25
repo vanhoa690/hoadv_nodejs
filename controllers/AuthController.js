@@ -2,6 +2,7 @@ const Student = require('../models/StudentModel');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const registerValidator = require('../validations/student');
 
 dotenv.config();
 
@@ -11,6 +12,11 @@ class AuthController {
   async registerStudent(req, res) {
     try {
       const { fullname, email, password } = req.body;
+      // * Bước 1: Validation values
+      const { error } = registerValidator.validate(req.body, {
+        abortEarly: false,
+      });
+
       // Bước 2: Email người dùng đăng ký đã tồn tại trong DB hay chưa?
       const studentExist = await Student.findOne({ email });
       if (studentExist) {
@@ -22,7 +28,7 @@ class AuthController {
       // Bước 3: Mã hoá mật khẩu
       const hashPassword = await bcryptjs.hash(password, 10);
       await Student.create({
-        Student,
+        fullname,
         email,
         password: hashPassword,
       });
