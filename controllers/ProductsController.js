@@ -24,6 +24,7 @@ class ProductsController {
   // [POST] /product
   async createProduct(req, res) {
     try {
+      // Valadiate rep.body
       const product = new Product(req.body);
       await product.save();
       res.json({ message: 'Add Product Successful' });

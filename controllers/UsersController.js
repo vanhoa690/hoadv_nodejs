@@ -2,6 +2,7 @@ const User = require('../models/UserModel');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const createUserValidator = require('../validations/user');
 
 dotenv.config();
 
@@ -32,8 +33,18 @@ class UsersController {
   async createUser(req, res) {
     try {
       const { username, email, password } = req.body;
+      // * Bước 1: Validation values
+      const { error } = createUserValidator.validate(req.body, {
+        abortEarly: false,
+      });
+      if (error) {
+        const errors = error.details.map((err) => err.message);
+        return res.status(400).json({ messages: errors });
+      }
+
       // Bước 2: Email người dùng đăng ký đã tồn tại trong DB hay chưa?
       const userExist = await User.findOne({ email });
+
       if (userExist) {
         return res.status(400).json({
           message: 'Email này đã được đăng ký',
@@ -42,12 +53,21 @@ class UsersController {
 
       // Bước 3: Mã hoá mật khẩu
       const hashPassword = await bcryptjs.hash(password, 10);
-      await User.create({
+
+      const user = await User.create({
         username,
         email,
         password: hashPassword,
       });
-      res.status(200).json({ message: 'Add user successfull' });
+
+      res.status(200).json({
+        message: 'Add user successfull',
+        data: {
+          email: user.email,
+          role: user.role,
+          username: user.username,
+        },
+      });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -57,18 +77,28 @@ class UsersController {
   async loginUser(req, res) {
     try {
       const { email, password } = req.body;
-      // Bước 1: Validate email
+
+      // Bước 1: Validate email, password
+      const { error } = createUserValidator.validate(req.body, {
+        abortEarly: false,
+      });
+
+      if (error) {
+        const errors = error.details.map((err) => err.message);
+        return res.status(400).json({ messages: errors });
+      }
 
       // Bước 2: Kiểm tra xem email có trong db hay không?
       const user = await User.findOne({ email });
+      console.log(user)
       if (!user) {
         return res.status(404).json({
-          message: 'Email này chưa đăng ký, bạn có muốn đăng ký không?',
+          message: 'Email or Password không đúng, vui lòng kiểm tra lại!',
         });
       }
 
       // Bước 3: Kiểm tra password
-      const isMatch = bcryptjs.compare(password, user.password);
+      const isMatch = await bcryptjs.compare(password, user.password);
 
       if (!isMatch) {
         return res.status(400).json({
@@ -81,7 +111,14 @@ class UsersController {
         expiresIn: '1d',
       });
 
-      res.json({
+      
+      if (!token) {
+        return res.status(400).json({
+          message: 'Token sign fail',
+        });
+      }
+
+      res.status(200).json({
         message: 'Login successfull',
         token,
         user: {
