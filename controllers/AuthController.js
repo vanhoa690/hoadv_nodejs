@@ -10,7 +10,7 @@ const { SECRET_CODE } = process.env;
 class AuthController {
   async registerStudent(req, res) {
     try {
-      const { studentname, email, password } = req.body;
+      const { fullname, email, password } = req.body;
       // Bước 2: Email người dùng đăng ký đã tồn tại trong DB hay chưa?
       const studentExist = await Student.findOne({ email });
       if (studentExist) {
@@ -22,7 +22,7 @@ class AuthController {
       // Bước 3: Mã hoá mật khẩu
       const hashPassword = await bcryptjs.hash(password, 10);
       await Student.create({
-        studentname,
+        Student,
         email,
         password: hashPassword,
       });

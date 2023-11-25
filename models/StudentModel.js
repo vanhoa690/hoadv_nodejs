@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const Sudent = new Schema(
+const Student = new Schema(
   {
     fullname: { type: String },
     email: { type: String },
@@ -17,4 +17,4 @@ const Sudent = new Schema(
   { timestamps: true, versionKey: false }
 );
 
-module.exports = mongoose.model('Sudent', Sudent);
+module.exports = mongoose.model('Student', Student);
