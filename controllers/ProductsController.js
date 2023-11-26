@@ -5,20 +5,20 @@ class ProductsController {
   // [GET] /products
   async getAllProducts(req, res) {
     try {
-      const products = await Product.find();
+      const products = await Product.find({ student: res.locals.student._id })
       res.json(products);
     } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
+      res.status(400).json({ error: error.message });
     }
   }
 
   // [GET] /products/:id
   async getProductDetail(req, res) {
     try {
-      const product = await Product.findById(req.params.id);
+      const product = await Product.findOne({ _id: req.params.id, student: res.locals.student._id })
       res.json(product);
     } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
+      res.status(400).json({ error: error.message });
     }
   }
 
@@ -33,7 +33,7 @@ class ProductsController {
   
         if (error) {
           const errors = error.details.map((err) => err.message);
-          return res.status(400).json({ messages: errors });
+          res.status(400).json({ error: error.message });
         }
       // Valadiate rep.body
       const product = new Product({...req.body, student: res.locals.student._id});
