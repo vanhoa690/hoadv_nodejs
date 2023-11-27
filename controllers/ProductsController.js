@@ -5,7 +5,8 @@ class ProductsController {
   // [GET] /products
   async getAllProducts(req, res) {
     try {
-      const products = await Product.find({ student: res.locals.student._id })
+      // const products = await Product.find()
+      const products = await Product.find({ student: res.locals.id })
       res.json(products);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -15,7 +16,7 @@ class ProductsController {
   // [GET] /products/:id
   async getProductDetail(req, res) {
     try {
-      const product = await Product.findOne({ _id: req.params.id, student: res.locals.student._id })
+      const product = await Product.findOne({ _id: req.params.id, student: res.locals.id })
       res.json(product);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -25,21 +26,20 @@ class ProductsController {
   // [POST] /product
   async createProduct(req, res) {
     try {
-      console.log(res.locals)
-        // Bước 1: Validate email, password
-        const { error } = productValidator.validate(req.body, {
-          abortEarly: false,
-        });
-  
-        if (error) {
-          const errors = error.details.map((err) => err.message);
-          res.status(400).json({ error: error.message });
-        }
+      // Bước 1: Validate email, password
+      const { error } = productValidator.validate(req.body, {
+        abortEarly: false,
+      });
+
+      if (error) {
+        const errors = error.details.map((err) => err.message);
+        res.status(400).json({ error: error.message });
+      }
       // Valadiate rep.body
-      const product = new Product({...req.body, student: res.locals.student._id});
-      console.log(product)
-      await product.save();
-      res.json({ message: 'Add Product Successful' });
+      const product = new Product({ ...req.body, student: res.locals.id });
+
+      const saveProduct = await product.save();
+      res.json({ message: 'Add Product Successful', data: saveProduct });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -49,7 +49,7 @@ class ProductsController {
   async updateProduct(req, res) {
     try {
       const product = await Product.updateOne({ _id: req.params.id }, req.body);
-      res.status(200).json({ message: 'Update Product Successful' });
+      res.status(200).json({ message: 'Update Product Successful', data: product });
     } catch (error) {
       res.status(400).json({ error: 'ERROR!!!' });
     }

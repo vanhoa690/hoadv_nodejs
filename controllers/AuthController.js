@@ -2,7 +2,7 @@ const Student = require('../models/StudentModel');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const registerValidator = require('../validations/student');
+const { registerValidator, loginValidator } = require('../validations/student');
 
 dotenv.config();
 
@@ -16,7 +16,10 @@ class AuthController {
       const { error } = registerValidator.validate(req.body, {
         abortEarly: false,
       });
-
+      if (error) {
+        const errors = error.details.map((err) => err.message);
+        return res.status(400).json({ messages: errors });
+      }
       // Bước 2: Email người dùng đăng ký đã tồn tại trong DB hay chưa?
       const studentExist = await Student.findOne({ email });
       if (studentExist) {
@@ -43,7 +46,13 @@ class AuthController {
     try {
       const { email, password } = req.body;
       // Bước 1: Validate email
-
+      const { error } = loginValidator.validate(req.body, {
+        abortEarly: false,
+      });
+      if (error) {
+        const errors = error.details.map((err) => err.message);
+        return res.status(400).json({ messages: errors });
+      }
       // Bước 2: Kiểm tra xem email có trong db hay không?
       const student = await Student.findOne({ email });
       if (!student) {
@@ -53,8 +62,7 @@ class AuthController {
       }
 
       // Bước 3: Kiểm tra password
-      const isMatch = bcryptjs.compare(password, student.password);
-
+      const isMatch = await bcryptjs.compare(password, student.password);
       if (!isMatch) {
         return res.status(400).json({
           message: 'Email or Password không đúng, vui lòng kiểm tra lại!',
@@ -70,7 +78,7 @@ class AuthController {
         message: 'Login successfull',
         token,
         student: {
-          studentname: student.studentname,
+          fullname: student.fullname,
           email: student.email,
         },
       });

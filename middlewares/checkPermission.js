@@ -7,12 +7,9 @@ dotenv.config();
 
 const { SECRET_CODE } = process.env;
 
-const checkPermission = async (req, res, next) => {
+const checkPermissionUser = async (req, res, next) => {
   try {
-    console.log(req.headers.authorization);
-    // Bước 1: Kiểm tra xem đã đăng nhập hay chưa?
     const token = req.headers.authorization?.split(' ')[1];
-    console.log(token);
     if (!token) {
       return res.status(403).json({
         message: 'Bạn chưa đăng nhập!',
@@ -20,25 +17,19 @@ const checkPermission = async (req, res, next) => {
     }
     // Bước 2: Verify token
     const decoded = jwt.verify(token, SECRET_CODE);
-    console.log(decoded);
-    if (!decoded) {
-      throw new Error('Token Error!');
-    }
+    console.log(decoded)
+
     // Bước 3: Find User từ token
     const user = await User.findById(decoded._id);
-    if (!user) {
-      return res.status(404).json({
-        message: 'User không tồn tại trong hệ thống!',
-      });
-    }
-    console.log(user);
-    // Bước 4: Check user.role
+
+    //  Bước 4: Check user.role === 'admin' | 'member'
     if (user.role !== 'admin') {
-      return res.status(400).json({
+      return res.status(403).json({
         message: 'Bạn không có quyền làm việc này!',
       });
     }
     next();
+
   } catch (error) {
     return res.status(400).json({
       name: error.name,
@@ -59,11 +50,10 @@ const checkPermissionStudent = async (req, res, next) => {
     }
     // Bước 2: Verify token
     const decoded = jwt.verify(token, SECRET_CODE);
-   
+
     if (!decoded) {
       throw new Error('Token Error!');
     }
-    // console.log(decoded)
     // Bước 3: Find User từ token
     const student = await Student.findById(decoded._id);
     // console.log(student)
@@ -72,7 +62,7 @@ const checkPermissionStudent = async (req, res, next) => {
         message: 'Student không tồn tại trong hệ thống!',
       });
     }
-    res.locals.student = student
+    res.locals.id = student._id
     next();
   } catch (error) {
     return res.status(400).json({
@@ -82,4 +72,4 @@ const checkPermissionStudent = async (req, res, next) => {
   }
 };
 
-module.exports = {checkPermission, checkPermissionStudent};
+module.exports = { checkPermissionStudent, checkPermissionUser };
