@@ -1,4 +1,6 @@
 const products = require('./products')
+const categories = require('./categories')
+
 const site = require('./site')
 const users = require('./users')
 const students = require('./students')
@@ -8,6 +10,7 @@ const { checkPermissionStudent, checkPermissionUser } = require('../middlewares/
 function routes(app) {
     app.use('/auth', auth)
     app.use('/students', students)
+    app.use('/categories', categories)
     app.use('/users', checkPermissionUser, users)
     app.use('/products', checkPermissionStudent, products)
     app.use('/', site)

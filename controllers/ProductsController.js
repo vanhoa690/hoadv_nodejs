@@ -33,7 +33,7 @@ class ProductsController {
 
       if (error) {
         const errors = error.details.map((err) => err.message);
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ errors });
       }
       // Valadiate rep.body
       const product = new Product({ ...req.body, student: res.locals.id });
@@ -51,7 +51,7 @@ class ProductsController {
       const product = await Product.updateOne({ _id: req.params.id }, req.body);
       res.status(200).json({ message: 'Update Product Successful', data: product });
     } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
+      res.status(400).json({ error: error.message });
     }
   }
 
@@ -61,7 +61,7 @@ class ProductsController {
       await Product.deleteOne({ _id: req.params.id });
       res.status(200).json({ message: 'Delete Product Successful' });
     } catch (error) {
-      res.status(400).json({ error: 'ERROR!!!' });
+      res.status(400).json({ error: error.message });
     }
   }
 }
