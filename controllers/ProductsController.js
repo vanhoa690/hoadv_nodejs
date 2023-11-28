@@ -1,12 +1,14 @@
-const Product = require('../models/ProductModel');
-const productValidator = require('../validations/product');
+const Product = require("../models/ProductModel");
+const productValidator = require("../validations/product");
 
 class ProductsController {
   // [GET] /products
   async getAllProducts(req, res) {
     try {
       // const products = await Product.find()
-      const products = await Product.find({ student: res.locals.id })
+      const products = await Product.find({ student: res.locals.id }).populate(
+        "category"
+      );
       res.json(products);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -16,7 +18,10 @@ class ProductsController {
   // [GET] /products/:id
   async getProductDetail(req, res) {
     try {
-      const product = await Product.findOne({ _id: req.params.id, student: res.locals.id })
+      const product = await Product.findOne({
+        _id: req.params.id,
+        student: res.locals.id,
+      }).populate("category");
       res.json(product);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -39,7 +44,7 @@ class ProductsController {
       const product = new Product({ ...req.body, student: res.locals.id });
 
       const saveProduct = await product.save();
-      res.json({ message: 'Add Product Successful', data: saveProduct });
+      res.json({ message: "Add Product Successful", data: saveProduct });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -49,7 +54,9 @@ class ProductsController {
   async updateProduct(req, res) {
     try {
       const product = await Product.updateOne({ _id: req.params.id }, req.body);
-      res.status(200).json({ message: 'Update Product Successful', data: product });
+      res
+        .status(200)
+        .json({ message: "Update Product Successful", data: product });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
@@ -59,7 +66,7 @@ class ProductsController {
   async deleleProduct(req, res) {
     try {
       await Product.deleteOne({ _id: req.params.id });
-      res.status(200).json({ message: 'Delete Product Successful' });
+      res.status(200).json({ message: "Delete Product Successful" });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

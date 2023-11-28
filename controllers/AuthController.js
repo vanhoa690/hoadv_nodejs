@@ -41,7 +41,7 @@ class AuthController {
     }
   }
 
-  // [POST] /students/login
+  // [POST] /auth/login
   async loginStudent(req, res) {
     try {
       const { email, password } = req.body;
@@ -70,7 +70,7 @@ class AuthController {
       }
 
       // Bước 4: Tạo ra token
-      const token = jwt.sign({ _id: student._id }, SECRET_CODE, {
+      const token = jwt.sign({ id: student._id }, SECRET_CODE, {
         expiresIn: '1d',
       });
 

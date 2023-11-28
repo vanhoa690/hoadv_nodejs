@@ -107,7 +107,7 @@ class UsersController {
       }
 
       // Bước 4: Tạo ra token
-      const token = jwt.sign({ _id: user._id }, SECRET_CODE, {
+      const token = jwt.sign({ id: user._id }, SECRET_CODE, {
         expiresIn: '1d',
       });
 

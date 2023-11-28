@@ -9,6 +9,7 @@ const { SECRET_CODE } = process.env;
 
 const checkPermissionUser = async (req, res, next) => {
   try {
+    //Bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTYxYWY5YzFkYTc4Y2ZlMjMxZTk2NTEiLCJpYXQiOjE3MDExNTc4MzIsImV4cCI6MTcwMTI0NDIzMn0.pR0wQTAs6UXntroM4_TCqF7EDI77aOTimdnWa0nPMI0
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
       return res.status(403).json({
@@ -18,9 +19,10 @@ const checkPermissionUser = async (req, res, next) => {
     // Bước 2: Verify token
     const decoded = jwt.verify(token, SECRET_CODE);
     console.log(decoded)
+    // {_id: userId}
 
     // Bước 3: Find User từ token
-    const user = await User.findById(decoded._id);
+    const user = await User.findById(decoded.id);
 
     //  Bước 4: Check user.role === 'admin' | 'member'
     if (user.role !== 'admin') {
@@ -55,7 +57,7 @@ const checkPermissionStudent = async (req, res, next) => {
       throw new Error('Token Error!');
     }
     // Bước 3: Find User từ token
-    const student = await Student.findById(decoded._id);
+    const student = await Student.findById(decoded.id);
     // console.log(student)
     if (!student) {
       return res.status(404).json({
