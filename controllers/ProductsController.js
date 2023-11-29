@@ -38,7 +38,7 @@ class ProductsController {
 
       if (error) {
         const errors = error.details.map((err) => err.message);
-        res.status(400).json({ errors });
+        return res.status(400).json({ errors });
       }
       // Valadiate rep.body
       const product = new Product({ ...req.body, student: res.locals.id });
