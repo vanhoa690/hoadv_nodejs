@@ -1,5 +1,6 @@
 const products = require('./products')
 const categories = require('./categories')
+const upload = require('./upload')
 
 const site = require('./site')
 const users = require('./users')
@@ -9,6 +10,7 @@ const { checkPermissionStudent, checkPermissionUser } = require('../middlewares/
 
 function routes(app) {
     app.use('/auth', auth)
+    app.use('/upload', upload)
     app.use('/students', students)
     app.use('/categories', categories)
     app.use('/users', checkPermissionUser, users)
