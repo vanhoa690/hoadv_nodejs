@@ -1,7 +1,7 @@
-const express = require('express');
-const { engine } = require('express-handlebars');
-const cors = require('cors');
-const dotenv = require('dotenv');
+const express = require("express");
+const { engine } = require("express-handlebars");
+const cors = require("cors");
+const dotenv = require("dotenv");
 
 const app = express();
 dotenv.config();
@@ -17,13 +17,15 @@ app.use(
 );
 app.use(express.json());
 
+app.use(express.static("uploads"));
+
 // Template engine
-app.engine('.hbs', engine({ extname: '.hbs' }));
-app.set('view engine', '.hbs');
+app.engine(".hbs", engine({ extname: ".hbs" }));
+app.set("view engine", ".hbs");
 
-const routes = require('./routes');
+const routes = require("./routes");
 
-const db = require('./config/db');
+const db = require("./config/db");
 
 // Connect to DB
 db.connect(DB_URL);
