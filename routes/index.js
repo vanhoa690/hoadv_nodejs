@@ -17,7 +17,7 @@ function routes(app) {
   app.use("/students", students);
   app.use("/categories", categories);
   app.use("/users", checkPermissionUser, users);
-  app.use("/products", checkPermissionUser, products);
+  app.use("/products", checkPermissionStudent, products);
   app.use("/", site);
 }
 
