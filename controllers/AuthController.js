@@ -71,7 +71,7 @@ class AuthController {
 
       // Bước 4: Tạo ra token
       const token = jwt.sign({ id: student._id }, SECRET_CODE, {
-        expiresIn: '1d',
+        expiresIn: '30d',
       });
 
       res.json({
