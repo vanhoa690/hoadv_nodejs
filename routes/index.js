@@ -1,4 +1,5 @@
 const products = require("./products");
+const apiProducts = require("./apiProducts");
 const categories = require("./categories");
 const upload = require("./upload");
 
@@ -18,6 +19,7 @@ function routes(app) {
   app.use("/categories", categories);
   app.use("/users", checkPermissionUser, users);
   app.use("/products", checkPermissionStudent, products);
+  app.use("/api/products", apiProducts);
   app.use("/", site);
 }
 
