@@ -34,7 +34,7 @@ class StudentsController {
         total,
         page: page + 1,
         limit,
-        studentsRes,
+        data: studentsRes,
       };
       res.status(200).json(response);
     } catch (error) {
