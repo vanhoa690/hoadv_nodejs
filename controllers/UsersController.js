@@ -1,8 +1,8 @@
-const User = require('../models/UserModel');
-const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const createUserValidator = require('../validations/user');
+const User = require("../models/UserModel");
+const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const createUserValidator = require("../validations/user");
 
 dotenv.config();
 
@@ -47,7 +47,7 @@ class UsersController {
 
       if (userExist) {
         return res.status(400).json({
-          message: 'Email này đã được đăng ký',
+          message: "Email này đã được đăng ký",
         });
       }
 
@@ -61,7 +61,7 @@ class UsersController {
       });
 
       res.status(200).json({
-        message: 'Add user successfull',
+        message: "Add user successfull",
         data: {
           email: user.email,
           role: user.role,
@@ -90,10 +90,10 @@ class UsersController {
 
       // Bước 2: Kiểm tra xem email có trong db hay không?
       const user = await User.findOne({ email });
-      console.log(user)
+
       if (!user) {
         return res.status(404).json({
-          message: 'Email or Password không đúng, vui lòng kiểm tra lại!',
+          message: "Email or Password không đúng, vui lòng kiểm tra lại!",
         });
       }
 
@@ -102,24 +102,23 @@ class UsersController {
 
       if (!isMatch) {
         return res.status(400).json({
-          message: 'Email or Password không đúng, vui lòng kiểm tra lại!',
+          message: "Email or Password không đúng, vui lòng kiểm tra lại!",
         });
       }
 
       // Bước 4: Tạo ra token
       const token = jwt.sign({ id: user._id }, SECRET_CODE, {
-        expiresIn: '1d',
+        expiresIn: "1d",
       });
 
-      
       if (!token) {
         return res.status(400).json({
-          message: 'Token sign fail',
+          message: "Token sign fail",
         });
       }
 
       res.status(200).json({
-        message: 'Login successfull',
+        message: "Login successfull",
         token,
         user: {
           username: user.username,
@@ -135,7 +134,7 @@ class UsersController {
   async deleleUser(req, res) {
     try {
       await User.deleteOne({ _id: req.params.id });
-      res.status(200).json({ message: 'Delete User Successful' });
+      res.status(200).json({ message: "Delete User Successful" });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
